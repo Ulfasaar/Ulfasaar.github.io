@@ -1,97 +1,177 @@
-# Gatsby 1.0 starter
+[![Code Climate](https://codeclimate.com/github/Vagr9K/gatsby-material-starter/badges/gpa.svg)](https://codeclimate.com/github/Vagr9K/gatsby-material-starter)
+[![Issue Count](https://codeclimate.com/github/Vagr9K/gatsby-material-starter/badges/issue_count.svg)](https://codeclimate.com/github/Vagr9K/gatsby-material-starter)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/990fb54ea8094f2aa0ed77f14e859820)](https://www.codacy.com/app/Vagr9K/gatsby-material-starter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Vagr9K/gatsby-material-starter&amp;utm_campaign=Badge_Grade)
+<div align="center">
+    <img src="docs/logo.png" alt="Logo" width='200px' height='200px'/>
+</div>
 
-[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
-[![Build Status](https://travis-ci.org/fabien0102/gatsby-starter.svg?branch=master)](https://travis-ci.org/fabien0102/gatsby-starter)
-[![Build status](https://ci.appveyor.com/api/projects/status/k06pajqcm23lay1s/branch/master?svg=true)](https://ci.appveyor.com/project/fabien0102/gatsby-starter/branch/master)
-[![Code Climate](https://codeclimate.com/github/fabien0102/gatsby-starter/badges/gpa.svg)](https://codeclimate.com/github/fabien0102/gatsby-starter)
-[![Test Coverage](https://codeclimate.com/github/fabien0102/gatsby-starter/badges/coverage.svg)](https://codeclimate.com/github/fabien0102/gatsby-starter/coverage)
+# Gatsby Material Starter
+A blog starter with Material design in mind for [Gatsby](https://github.com/gatsbyjs/gatsby/).
 
-Demo: <https://fabien0102-gatsby-starter.netlify.com/>
+[Demo website.](https://vagr9k.github.io/gatsby-material-starter/)
 
-Storybook: <https://fabien0102-gatsby-starter.netlify.com/docs/>
+![Screenshot](docs/screenshot.png)
 
-Gatsby 1.0 starter for generate awesome static website working with a nice env development.
+## GatsbyJS V1
 
-## Warning
+This starter is based on GatsbyJS V1, which brings progressive web app features such as automatic code and data splitting (by route), prefetching, with service worker/offline-first support and PRPL pattern.
 
-This starter is currently in wip (see progression to #What's inside session).
+More information in the [announcement](https://www.gatsbyjs.org/blog/gatsby-first-beta-release/).
 
-## Getting started
+## Features
 
-Install this starter (assuming Gatsby is installed) by running from your CLI: 
+* Blazing fast loading times thanks to pre-rendered HTML and automatic chunk loading of JS files
+* [React-MD](https://github.com/mlaursen/react-md) for Material design
+  * Integrated FontAwesome support
+  * Integrated Material Icons support
+* SASS/SCSS styling
+* Separate components for everything
+* High configurability:
+  * User information
+  * User social profiles
+  * Copyright information
+  * More!
+* Author segment
+  * Name
+  * Location
+  * Description
+  * Links
+  * Follow Me button
+* Posts in Markdown
+  * Code syntax highlighting
+  * Embedded YouTube videos
+  * Embedded Tweets
+* Tags
+  * Seprate page for posts under each tag
+* Categories
+  * Separate page for posts under each category
+* Suggested posts segment
+* Disqus support
+  * Notifications about new disqus comments
+* Google Analytics support
+* Responsive design
+  * On mobile, Disqus is loaded only after expanding comments for better performance
+* Social features
+  * Twitter tweet button
+  * Facebook share/share count
+  * Reddit share/share count
+  * Google+ share button
+  * LinkedIn share button
+  * Telegram share button
+* SEO
+  * Sitemap generation
+  * robots.txt
+  * General description tags
+  * Schema.org JSONLD (Google Rich Snippets)
+  * OpenGraph Tags (Facebook/Google+/Pinterest)
+  * Twitter Tags (Twitter Cards)
+* RSS feeds
+* Loading progress for slow networks
+* Offline support
+* Web App Manifest support
+* Development tools
+  * ESLint for linting
+  * Prettier for code style
+  * Remark-Lint for linting Markdown
+  * write-good for linting English prose
+  * gh-pages for deploying to GitHub pages
+  * CodeClimate configuration file and badge
 
-```bash
-$ gatsby new my-website https://github.com/fabien0102/gatsby-starter
+NOTE: Take a look at [gatsby-advanced-starter](https://github.com/Vagr9K/gatsby-advanced-starter) if you prefer building UI from scratch and/or only interested in fundamental features.
+
+You can also visit [my personal blog](https://vagr9k.me) if you want to see a fully implemented blog based on this starter.
+
+![Article Screenshot](docs/screenshot-article.png)
+![Mobile Screenshot](docs/screenshot-mobile.png)
+
+## Getting Started
+
+Install this starter (assuming [Gatsby](https://github.com/gatsbyjs/gatsby/) is installed) by running from your CLI:
+
+```sh
+gatsby new YourProjectName https://github.com/Vagr9K/gatsby-material-starter
+npm run serve
 ```
 
-Run `yarn start` (or press `F5` if you are on VSCode) to hot-serve your website on <http://localhost:8000>.
+Or you can fork the project, make your changes there and merge new features when needed.
 
-Run `yarn build` to create static site ready to host (`/public`)
+Alternatively:
 
-## What's inside?
+```sh
+git clone https://github.com/Vagr9K/gatsby-material-starter YourProjectName # Clone the project
+cd YourProjectname
+rm -rf .git # So you can have your own changes stored in VCS.
+npm install # or yarn
+npm run serve
+```
 
--   [ ] Gatsby 1.0 (alpha)
-    -   [x] sharp
-    -   [x] offline support
-    -   [ ] google analytics
-    -   [x] manifest
-    -   [x] typescript
-    -   [x] blog in markdown
--   [x] Best practices tools
-    -   [x] [Jest](https://facebook.github.io/jest/) / [Enzyme](http://airbnb.io/enzyme/)
-    -   [x] [Storybook](https://storybooks.js.org/)
-    -   [x] [Typescript](https://www.typescriptlang.org/) / [tslint](https://palantir.github.io/tslint/)
-    -   [x] [xo linter](https://github.com/sindresorhus/xo)
-    -   [x] [Remark-lint](https://github.com/wooorm/remark-lint)
-    -   [x] [Hunsky](https://github.com/typicode/husky) & [lint-staged](https://github.com/okonet/lint-staged) for autofix each commit
-    -   [x] Travis/AppVeyor config (unix-osx-windows CI)
-    -   [x] Code climate config
--   [ ] SEO
-    -   [ ] [Helmet](https://github.com/nfl/react-helmet)
--   [x] [Semantic-ui](http://react.semantic-ui.com) for styling
--   [x] Lazyboy tools
-    -   [x] [plop](https://github.com/amwmedia/plop) templates -> `yarn generate`
+## Configuration
 
-## Files structure
+ Edit the export object in `data/SiteConfig`:
 
-     .
-     ├── data                          // website data (included into graphQL)
-     │   ├── author.json               // list of blog authors
-     │   ├── avatars                   // authors avatars
-     │   └── blog                      // all blog data (posts, images)
-     ├── gatsby-config.js              // gatsby configuration
-     ├── gatsby-node.js                // gatsby node hooks
-     ├── generators                    // generators (`yarn generate`)
-     │   ├── blog-post-generator.js    // `blog post` generator
-     │   ├── component-generator.js    // `component` generator
-     │   ├── page-generator.js         // `page` generator
-     │   ├── plopfile.js               // generators entry
-     │   ├── templates                 // all templates (handlebar notation)
-     │   └── utils.js                  // utils scripts for generators
-     ├── package.json
-     ├── public                        // output folder (in .gitignore)
-     ├── README.md                     // this file
-     ├── src                           // sources
-     │   ├── components                // all react components
-     │   ├── css                       // styles
-     │   ├── declarations.d.ts         // declarations for no typescript modules/files
-     │   ├── graphql-types.d.ts        // graphql types (`yarn graphql-types`)
-     │   ├── html.tsx                  // main html (required)
-     │   ├── layouts                   // layouts
-     │   │   └── default.tsx           // default layout (required)
-     │   ├── pages                     // all pages
-     │   └── templates                 // all templates (used for procedural page creation, see `gatsby-node.js`)
-     ├── tools                         // miscs tools for dev
-     │   └── update-post-date.js       // update post date hook
-     ├── tsconfig.json                 // typescript configuration
-     ├── tslint.json                   // tslint configuration
-     └── yarn.lock                     // yarn lock file
+ ```js
+module.exports = {
+  blogPostDir: 'sample-posts', // The name of directory that contains your posts.
+  siteTitle: 'Gatsby Material Starter', // Site title.
+  siteTitleAlt: 'GatsbyJS Material Starter', // Alternative site title for SEO.
+  siteLogo: '/logos/logo-1024.png', // Logo used for SEO and manifest.
+  siteUrl: 'https://vagr9k.github.io', // Domain of your website without pathPrefix.
+  pathPrefix: '/gatsby-material-starter', // Prefixes all links. For cases when deployed to example.github.io/gatsby-material-starter/.
+  siteDescription: 'A GatsbyJS stater with Material design in mind.', // Website description used for RSS feeds/meta description tag.
+  siteRss: '/rss.xml', // Path to the RSS file.
+  siteFBAppID: '1825356251115265', // FB Application ID for using app insights
+  siteGATrackingID: 'UA-47311644-4', // Tracking code ID for google analytics.
+  disqusShortname: 'https-vagr9k-github-io-gatsby-material-starter', // Disqus shortname.
+  postDefaultCategoryID: 'Tech', // Default category for posts.
+  userName: 'Material User', // Username to display in the author segment.
+  userTwitter: '', // Optionally renders "Follow Me" in the UserInfo segment.
+  userLocation: 'North Pole, Earth', // User location to display in the author segment.
+  userAvatar: 'https://api.adorable.io/avatars/150/test.png', // User avatar to display in the author segment.
+  userDescription: "Yeah, I like animals better than people sometimes... Especially dogs. Dogs are the best. Every time you come home, they act like they haven't seen you in a year. And the good thing about dogs... is they got different dogs for different people.", // User description to display in the author segment.
+  // Links to social profiles/projects you want to display in the author segment/navigation bar.
+  userLinks: [
+    {
+      label: 'GitHub',
+      url: 'https://github.com/Vagr9K/gatsby-material-starter',
+      iconClassName: 'fa fa-github',
+    },
+    {
+      label: 'Twitter',
+      url: 'https://twitter.com/Vagr9K',
+      iconClassName: 'fa fa-twitter',
+    },
+    {
+      label: 'Email',
+      url: 'mailto:vagr9k@gmail.com',
+      iconClassName: 'fa fa-envelope',
+    },
+  ],
+  copyright: 'Copyright © 2017. Material User', // Copyright string for the footer of the website and RSS feed.
 
-## Plop generators - `yarn generate`
+};
+ ```
 
-To avoid any boring copy/past, this starter-kit have many generators to permit 
-simple bootstrap of current file pattern (eg. components/pages/blog posts).
+ You can also optionally set `pathPrefix`:
+ ```js
+ module.exports = {
+  // Note: it must *not* have a trailing slash.
+       pathPrefix: '/gatsby-material-starter', // Prefixes all links. For cases when deployed to example.github.io/gatsby-material-starter/.
+}
 
-You can add/delete/modify any generators into `/generators` folder.
+ ```
 
-Be lazy and have fun!
+ NOTE: `user*`, `disqusShortname` and `copyright` are optional and won't render if omitted.
+
+ WARNING: Make sure to edit `static/robots.txt` to include your domain for the sitemap!
+
+## Theming
+
+Edit `src/layouts/theme.scss` to suit your needs.
+You can use [Material color palette](https://react-md.mlaursen.com/customization/colors) provided by React-MD.
+
+```css
+@import '~react-md/src/scss/react-md';
+$md-primary-color: $md-grey-400;
+$md-secondary-color: $md-red-800;
+$md-tertiary-color: $md-grey-300;
+```

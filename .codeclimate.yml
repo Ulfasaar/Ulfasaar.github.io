@@ -1,27 +1,24 @@
----
 engines:
-  csslint:
+  eslint:
+    enabled: true
+  stylelint:
     enabled: true
   duplication:
     enabled: true
     config:
       languages:
-      - javascript
-  eslint:
-    enabled: true
-  fixme:
-    enabled: true
-  tslint:
-    enabled: true
-    channel: beta
+        javascript:
+          mass_threshold: 70
+
 ratings:
-  paths:
-  - "**.tsx"
-  - "**.ts"
-  - "**.jsx"
-  - "**.js"
-  - "**.css"
+   paths:
+    - "**.js"
+    - "**.jsx"
+    - "**.css"
+    - "**.less"
+    - "**.scss"
+    - "**.sss"
+
 exclude_paths:
-- "test/"
-- "**/*.test.*"
-- "node_modules/"
+- static/**/*
+- src/templates/b16-tomorrow-dark.css

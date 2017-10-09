@@ -1,109 +1,154 @@
-const path = require('path');
-const slash = require('slash');
-const {kebabCase, uniq, get, compact, times} = require('lodash');
+const path = require("path");
+const _ = require("lodash");
+const webpackLodashPlugin = require("lodash-webpack-plugin");
 
-// Don't forget to update hard code values into:
-// - `templates/blog-page.tsx:23`
-// - `pages/blog.tsx:26`
-// - `pages/blog.tsx:121`
-const POSTS_PER_PAGE = 10;
-const cleanArray = arr => compact(uniq(arr));
+const postNodes = [];
 
-// Create slugs for files.
-// Slug will used for blog page path.
-exports.onCreateNode = ({node, boundActionCreators, getNode}) => {
-  const {createNodeField} = boundActionCreators;
+function addSibilingNodes(boundActionCreators) {
+  const { createNodeField } = boundActionCreators;
+  for (let i = 0; i < postNodes.length; i += 1) {
+    const nextID = i + 1 < postNodes.length ? i + 1 : 0;
+    const prevID = i - 1 > 0 ? i - 1 : postNodes.length - 1;
+    const currNode = postNodes[i];
+    const nextNode = postNodes[nextID];
+    const prevNode = postNodes[prevID];
+    createNodeField({
+      node: currNode,
+      name: "nextTitle",
+      value: nextNode.frontmatter.title
+    });
+    createNodeField({
+      node: currNode,
+      name: "nextSlug",
+      value: nextNode.fields.slug
+    });
+    createNodeField({
+      node: currNode,
+      name: "prevTitle",
+      value: prevNode.frontmatter.title
+    });
+    createNodeField({
+      node: currNode,
+      name: "prevSlug",
+      value: prevNode.fields.slug
+    });
+  }
+}
+
+exports.onCreateNode = ({ node, boundActionCreators, getNode }) => {
+  const { createNodeField } = boundActionCreators;
   let slug;
-  switch (node.internal.type) {
-    case `MarkdownRemark`:
-      const fileNode = getNode(node.parent);
-      const [basePath, name] = fileNode.relativePath.split('/');
-      slug = `/${basePath}/${name}/`;
-      break;
+  if (node.internal.type === "MarkdownRemark") {
+    const fileNode = getNode(node.parent);
+    const parsedFilePath = path.parse(fileNode.relativePath);
+    if (
+      Object.prototype.hasOwnProperty.call(node, "frontmatter") &&
+      Object.prototype.hasOwnProperty.call(node.frontmatter, "slug")
+    ) {
+      slug = `/${_.kebabCase(node.frontmatter.slug)}`;
+    }
+    if (
+      Object.prototype.hasOwnProperty.call(node, "frontmatter") &&
+      Object.prototype.hasOwnProperty.call(node.frontmatter, "title")
+    ) {
+      slug = `/${_.kebabCase(node.frontmatter.title)}`;
+    } else if (parsedFilePath.name !== "index" && parsedFilePath.dir !== "") {
+      slug = `/${parsedFilePath.dir}/${parsedFilePath.name}/`;
+    } else if (parsedFilePath.dir === "") {
+      slug = `/${parsedFilePath.name}/`;
+    } else {
+      slug = `/${parsedFilePath.dir}/`;
+    }
+    createNodeField({ node, name: "slug", value: slug });
+    postNodes.push(node);
   }
-  if (slug) {
-    createNodeField({node, name: `slug`, value: slug});
-  }
+
+  addSibilingNodes(boundActionCreators);
 };
 
-// Implement the Gatsby API `createPages`.
-// This is called after the Gatsby bootstrap is finished
-// so you have access to any information necessary to
-// programatically create pages.
-exports.createPages = ({graphql, boundActionCreators}) => {
-  const {createPage} = boundActionCreators;
+exports.createPages = ({ graphql, boundActionCreators }) => {
+  const { createPage } = boundActionCreators;
 
   return new Promise((resolve, reject) => {
-    const templates = ['blogPost', 'tagsPage', 'blogPage']
-      .reduce((mem, templateName) => {
-        return Object.assign({}, mem,
-        {[templateName]: path.resolve(`src/templates/${kebabCase(templateName)}.tsx`)});
-      }, {});
-
-    graphql(
-      `
-      {
-        posts: allMarkdownRemark {
-          edges {
-            node {
-              fields {
-                slug
-              }
-              frontmatter {
-                tags
+    const postPage = path.resolve("src/templates/post.jsx");
+    const tagPage = path.resolve("src/templates/tag.jsx");
+    const categoryPage = path.resolve("src/templates/category.jsx");
+    resolve(
+      graphql(
+        `
+        {
+          allMarkdownRemark {
+            edges {
+              node {
+                frontmatter {
+                  tags
+                  category
+                }
+                fields {
+                  slug
+                }
               }
             }
           }
         }
-      }
-    `
-    ).then(result => {
-      if (result.errors) {
-        return reject(result.errors);
-      }
-      const posts = result.data.posts.edges.map(p => p.node);
+      `
+      ).then(result => {
+        if (result.errors) {
+          /* eslint no-console: "off"*/
+          console.log(result.errors);
+          reject(result.errors);
+        }
 
-      // Create blog pages
-      posts
-        .filter(post => post.fields.slug.startsWith('/blog/'))
-        .forEach(post => {
+        const tagSet = new Set();
+        const categorySet = new Set();
+        result.data.allMarkdownRemark.edges.forEach(edge => {
+          if (edge.node.frontmatter.tags) {
+            edge.node.frontmatter.tags.forEach(tag => {
+              tagSet.add(tag);
+            });
+          }
+
+          if (edge.node.frontmatter.category) {
+            categorySet.add(edge.node.frontmatter.category);
+          }
+
           createPage({
-            path: post.fields.slug,
-            component: slash(templates.blogPost),
+            path: edge.node.fields.slug,
+            component: postPage,
             context: {
-              slug: post.fields.slug
+              slug: edge.node.fields.slug
             }
           });
         });
 
-      // Create tags pages
-      posts
-        .reduce((mem, post) =>
-          cleanArray(mem.concat(get(post, 'frontmatter.tags')))
-        , [])
-        .forEach(tag => {
+        const tagList = Array.from(tagSet);
+        tagList.forEach(tag => {
           createPage({
-            path: `/blog/tags/${kebabCase(tag)}/`,
-            component: slash(templates.tagsPage),
+            path: `/tags/${_.kebabCase(tag)}/`,
+            component: tagPage,
             context: {
               tag
             }
           });
         });
 
-      // Create blog pagination
-      const pageCount = Math.ceil(posts.length / POSTS_PER_PAGE);
-      times(pageCount, index => {
-        createPage({
-          path: `/blog/page/${index + 1}/`,
-          component: slash(templates.blogPage),
-          context: {
-            skip: index * POSTS_PER_PAGE
-          }
+        const categoryList = Array.from(categorySet);
+        categoryList.forEach(category => {
+          createPage({
+            path: `/categories/${_.kebabCase(category)}/`,
+            component: categoryPage,
+            context: {
+              category
+            }
+          });
         });
-      });
-
-      resolve();
-    });
+      })
+    );
   });
+};
+
+exports.modifyWebpackConfig = ({ config, stage }) => {
+  if (stage === "build-javascript") {
+    config.plugin("Lodash", webpackLodashPlugin, null);
+  }
 };
